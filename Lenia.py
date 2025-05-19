@@ -9,6 +9,8 @@ import IPython.display
 ################################################ Custom imports #############################################################################################################
 
 import Functions as F
+import Eval as E
+import Settings as S
 
 ################################################ Stable Lenia Entities ######################################################################################################
 
@@ -107,8 +109,8 @@ pattern["pacman"] = {"name":"Pacman","R":13,"T":2,"kernels":[
 
 #__________________________________________________ Simulation parameters ________________________________________________________________________
 
-size = 256;  mid = size // 2;  scale = 2;  cx, cy = 20, 20
-
+size = S.size;  mid = S.mid;  scale = S.scale;  cx, cy = S.cx, S.cy
+frame_id = 0
 #________________________________________________________________________________________________________________________________________________
 
 def run_world_execute(me, max_iterations=2000):
@@ -142,6 +144,7 @@ def run_world_execute(me, max_iterations=2000):
       return F.bell(U, m, s)*2-1
 
   def update(i):
+    
     global As, img
     ''' calculate convolution from source channels c0 '''
     #Us = [ np.real(np.fft.ifft2(fK * np.fft.fft2(A))) for fK in fKs ]
@@ -153,7 +156,10 @@ def run_world_execute(me, max_iterations=2000):
     ''' add growth values to channels '''
     #A = np.clip(A + 1/T * np.mean(np.asarray(Gs),axis=0), 0, 1)
     As = [ np.clip(A + 1/T * H, 0, 1) for A,H in zip(As,Hs) ]
-    for A in As: print(F.score_tracker(A))
+    ####Storing the data of the simulation (TODO: optimize to not evaluate every steps)####
+    F.Save_tojson_array(As, f"data_{me['name']}.json", r'C:\Users\gweno\Documents\Homework\ResearchEC\data')
+    # E.Eval_velocity(As)
+    ####
     ''' show image in RGB '''
     img.set_array(np.dstack(As))
     return img,
