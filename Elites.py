@@ -5,6 +5,7 @@ import Lenia
 import random
 import os
 import glob
+from datetime import datetime, timedelta
 
 ################## Fun #################
 import Functions as F
@@ -37,8 +38,11 @@ def map_elites(population):
     
     elite_map = init_population(population)
     for specimen in elite_map.keys():
+        end_time = datetime.now() + timedelta(seconds=5)
         timeout = 10  # Set the timeout in seconds
         world = Lenia.run_world_execute(elite_map[specimen])
+        while datetime.now() < end_time:
+            pass
         # TODO: Evaluate the world
             #TODO : Deserialize the world
             #TODO : Get metrics

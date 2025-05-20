@@ -172,7 +172,8 @@ def run_world_execute(me, max_iterations=2000):
   img = ax.imshow(A, cmap='viridis', interpolation='nearest')
 
   ani = matplotlib.animation.FuncAnimation(
-      fig, update, frames=200, interval=20, blit=True
+      fig, update, frames=200, interval=20, blit=True, repeat=False,
   )
-
-  plt.show()
+  plt.show(block = False)
+  plt.pause(10)
+  plt.close()

@@ -40,3 +40,9 @@ def clear_data_folder():
     for f in files:
         print(f"Deleting {f}")
         os.remove(f)
+        
+def read_data(filepath):
+    """
+    Read data from a JSON file and return it as a NumPy array.
+    """
+    
