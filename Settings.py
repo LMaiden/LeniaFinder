@@ -8,3 +8,9 @@ frame_id = 0
 
 ### filepaths
 data_fp = r'C:\Users\gweno\Documents\Homework\ResearchEC\data'
+
+### Spaghetti
+
+import numpy as np
+
+Channel_size = 3 #Equals to the number of channels in your evoling  -> np.array(Lenia.pattern["aquarium"]["cells"]).shape

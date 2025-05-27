@@ -38,16 +38,42 @@ def map_elites(population):
     
     elite_map = init_population(population)
     for specimen in elite_map.keys():
-        end_time = datetime.now() + timedelta(seconds=5)
-        timeout = 10  # Set the timeout in seconds
+        
+        
         world = Lenia.run_world_execute(elite_map[specimen])
-        while datetime.now() < end_time:
-            pass
-        # TODO: Evaluate the world
-            #TODO : Deserialize the world
-            #TODO : Get metrics
-        #TODO : MAP
+        
+    
+    Evos =[]
+    keys = []
+    for files in glob.glob(os.path.join(S.data_fp, '*.json')):
+        Evos.append(F.read_data(files))
+        keys.append(os.path.basename(files).split(".")[0])
 
+    for i in range(len(Evos)):
+        
+        metrics = {}
+        metrics[str(keys[i])] = {}
+        
+        mass = np.array([])
+        com = np.array([])
+        
+        for j in range(len(Evos[i])):
+            
+            mass = np.append(mass, F.mass(Evos[i][j : j+3]))
+            com = np.append(com, F.com(Evos[i][j : j+3], mass[-1]))
+            
+        metrics[str(keys[i])]["mass"] = mass
+        metrics[str(keys[i])]["avg_mass"] = np.mean(mass)
+        metrics[str(keys[i])]["std_mass"] = np.std(mass)
+        metrics[str(keys[i])]["center_of_mass"] = com
+        
+        velocity = F.velocity(com)
+        
+        metrics[str(keys[i])]["velocity"] = velocity
+        metrics[str(keys[i])]["avg_velocity"] = np.mean(velocity)
+        metrics[str(keys[i])]["std_velocity"] = np.std(velocity)
+        
+    print(metrics)
         
     return
 
@@ -56,5 +82,5 @@ def map_elites(population):
 
 if __name__ == "__main__":
     #TODO : run the map elites
-    population = 10
+    population = 1
     map_elites(population)

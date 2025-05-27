@@ -9,7 +9,6 @@ import IPython.display
 ################################################ Custom imports #############################################################################################################
 
 import Functions as F
-import Eval as E
 import Settings as S
 
 ################################################ Stable Lenia Entities ######################################################################################################
@@ -156,6 +155,7 @@ def run_world_execute(me, max_iterations=2000):
     ''' add growth values to channels '''
     #A = np.clip(A + 1/T * np.mean(np.asarray(Gs),axis=0), 0, 1)
     As = [ np.clip(A + 1/T * H, 0, 1) for A,H in zip(As,Hs) ]
+    
     ####Storing the data of the simulation (TODO: optimize to not evaluate every steps)####
     F.Save_tojson_array(As, f"data_{me['name']}.json", r'C:\Users\gweno\Documents\Homework\ResearchEC\data')
     # E.Eval_velocity(As)
