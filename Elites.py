@@ -8,7 +8,9 @@ import glob
 from datetime import datetime, timedelta
 
 ################## Fun #################
+
 import Functions as F
+
 ################# MAP ELITES #################
 
 def init_population(number):
@@ -45,14 +47,17 @@ def map_elites(population):
     
     Evos =[]
     keys = []
+    
     for files in glob.glob(os.path.join(S.data_fp, '*.json')):
         Evos.append(F.read_data(files))
         keys.append(os.path.basename(files).split(".")[0])
-
+        print(keys)
+        
+    metrics = {}
     for i in range(len(Evos)):
         
-        metrics = {}
         metrics[str(keys[i])] = {}
+        print(metrics.keys())
         
         mass = np.array([])
         com = np.array([])
@@ -73,8 +78,6 @@ def map_elites(population):
         metrics[str(keys[i])]["avg_velocity"] = np.mean(velocity)
         metrics[str(keys[i])]["std_velocity"] = np.std(velocity)
         
-    print(metrics)
-        
     return
 
 
@@ -82,5 +85,5 @@ def map_elites(population):
 
 if __name__ == "__main__":
     #TODO : run the map elites
-    population = 1
+    population = 10
     map_elites(population)
