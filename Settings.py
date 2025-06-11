@@ -7,6 +7,7 @@ cx, cy = 10, 10
 frame_id = 0
 
 ### filepaths
+elite_fp = r'C:\Users\gweno\Documents\Homework\ResearchEC\elites'
 data_fp = r'C:\Users\gweno\Documents\Homework\ResearchEC\data'
 
 ### Spaghetti

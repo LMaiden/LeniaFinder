@@ -175,5 +175,5 @@ def run_world_execute(me, max_iterations=2000):
       fig, update, frames=200, interval=20, blit=True, repeat=False,
   )
   plt.show(block = False)
-  plt.pause(10)
+  plt.pause(2)
   plt.close()

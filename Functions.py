@@ -47,6 +47,12 @@ def clear_data_folder():
     for f in files:
         os.remove(f)
         
+def clear_elite_folder():
+    filepath = S.elite_fp
+    files = glob.glob(os.path.join(filepath, '*.json'))
+    for f in files:
+        os.remove(f)
+        
 def read_data(filepath):
     """
     Read data from a JSON file and return it as a NumPy array.
@@ -99,5 +105,50 @@ def velocity(coord ):
         velocity[i] = np.sqrt((coord[i+3] - coord[i])**2 + (coord[i+4] - coord[i+1])**2 + (coord[i+5] - coord[i+2])**2)
     return velocity
 
-def angvelocity():
-    return
+#################### Fitness Selection Functions ####################
+
+def selector(performance, n_elites):
+    """
+    Selects the top n_elites entities based on their performance metrics.
+    Returns a list of (entity, score) tuples.
+    """
+    def compute_score(metrics):
+        return 2*metrics['avg_mass'] - (0.5 * metrics['std_mass']**2) - 0.5 * metrics['avg_velocity']
+
+    sorted_entities = sorted(
+        performance.items(),
+        key=lambda item: (item[1]['std_mass'], item[1]['avg_velocity'])
+    )[:n_elites]
+
+    result = [(entity, compute_score(metrics)) for entity, metrics in sorted_entities]
+    sorted_result = sorted(result, key=lambda x: x[1], reverse=True)
+    return sorted_result
+
+
+#Mutator Functions
+
+def mutate(world, mutation_rate=0.1):
+    """
+    Mutate the world by randomly changing some values based on the mutation rate.
+    Returns a new mutated world.
+    """
+    mutated_world = np.copy(world)
+    for z in range(len(mutated_world)):
+        for y in range(len(mutated_world[z])):
+            for x in range(len(mutated_world[z][y])):
+                if np.random.rand() < mutation_rate:
+                    mutated_world[z][y][x] += np.random.normal(0, 0.1)  # Add a small random value
+                    mutated_world[z][y][x] = max(mutated_world[z][y][x], 0)  # Ensure non-negativity
+    return mutated_world
+
+def crossover(parent1, parent2):
+    """    Perform crossover between two parent worlds to create a new world.
+    Returns a new world that is a combination of the two parents.
+    """
+    child = np.copy(parent1)
+    for z in range(len(child)):
+        for y in range(len(child[z])):
+            for x in range(len(child[z][y])):
+                if np.random.rand() < 0.5:  # Randomly choose genes from either parent
+                    child[z][y][x] = parent2[z][y][x]
+    return child
