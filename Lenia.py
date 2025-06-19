@@ -112,7 +112,7 @@ size = S.size;  mid = S.mid;  scale = S.scale;  cx, cy = S.cx, S.cy
 frame_id = 0
 #________________________________________________________________________________________________________________________________________________
 
-def run_world_execute(me, max_iterations=2000):
+def run_world_execute(me, show_animation, max_iterations=2000):
 
   #Load Entity
   globals().update(me)
@@ -146,17 +146,16 @@ def run_world_execute(me, max_iterations=2000):
     
     global As, img
     ''' calculate convolution from source channels c0 '''
-    #Us = [ np.real(np.fft.ifft2(fK * np.fft.fft2(A))) for fK in fKs ]
     fAs = [ np.fft.fft2(A) for A in As ]
     Us = [ np.real(np.fft.ifft2(fK * fAs[k['c0']])) for fK,k in zip(fKs,kernels) ]
+    
     ''' calculate growth values for destination channels c1 '''
     Gs = [ growth(U, k['m'], k['s']) for U,k in zip(Us,kernels) ]
     Hs = [ sum(k['h']*G for G,k in zip(Gs,kernels) if k['c1']==c1) for c1 in range(3) ]
+    
     ''' add growth values to channels '''
-    #A = np.clip(A + 1/T * np.mean(np.asarray(Gs),axis=0), 0, 1)
     As = [ np.clip(A + 1/T * H, 0, 1) for A,H in zip(As,Hs) ]
     
-    ####Storing the data of the simulation (TODO: optimize to not evaluate every steps)####
     F.Save_tojson_array(As, f"data_{me['name']}.json", r'C:\Users\gweno\Documents\Homework\ResearchEC\data')
     # E.Eval_velocity(As)
     ####
@@ -174,6 +173,9 @@ def run_world_execute(me, max_iterations=2000):
   ani = matplotlib.animation.FuncAnimation(
       fig, update, frames=200, interval=20, blit=True, repeat=False,
   )
-  plt.show(block = False)
-  plt.pause(2)
+  
+  
+  if show_animation:
+    plt.show()
+  plt.pause(4)
   plt.close()

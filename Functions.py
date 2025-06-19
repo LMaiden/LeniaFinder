@@ -5,6 +5,7 @@ import multiprocessing
 import time
 import glob
 import codecs
+import math
 
 import Settings as S
 
@@ -113,7 +114,7 @@ def selector(performance, n_elites):
     Returns a list of (entity, score) tuples.
     """
     def compute_score(metrics):
-        return 2*metrics['avg_mass'] - (0.5 * metrics['std_mass']**2) - 0.5 * metrics['avg_velocity']
+        return (10*metrics['avg_mass']) - ( metrics['std_mass']) -  metrics['avg_velocity']
 
     sorted_entities = sorted(
         performance.items(),

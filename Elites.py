@@ -45,10 +45,16 @@ def new_generation(parents, generation, initial_population):
                                  F.mutate(parents[random.randint(0, len(parents)-1)]))
         cells = cells[0 : 3][0 : 54][0 : 54]
         newcells = np.zeros((3, 54, 54))
-        for i in range(len(newcells)):
-            for j in range(len(newcells[i])):
-                for k in range(54):
-                    newcells[i][j][k] = max(0, min(cells[i][j][k], 1))
+        if random.random() < 0.05:
+            for i in range(len(newcells)):
+                for j in range(len(newcells[i])):
+                    for k in range(54):
+                        if random.random() < 0.1:
+                            newcells[i][j][k] = max(0, min(cells[i][j][k] + random.random(), 1))
+                        else:
+                            newcells[i][j][k] = cells[i][j][k]
+        else:
+            newcells = [[[random.random() for _ in range(54)] for _ in range(54)] for _ in range(3)]
         
         new_pop[name] = {
             "name": name,
@@ -75,7 +81,7 @@ def run_elites_lenia(pop):
     for specimen in elite_map.keys():
         
         
-        world = Lenia.run_world_execute(elite_map[specimen])
+        world = Lenia.run_world_execute(elite_map[specimen], False)
         
     
     Evos =[]
@@ -166,6 +172,11 @@ def MAP_ELITES(sample_size, n_elites = 10, iterations=100):
                 entity_data = F.read_data(src_file)
                 entity_data = entity_data[0 : 3]
                 F.Save_tojson_array(entity_data, f"{entity}.json", dst_dir)
+                
+            for f in glob.glob(os.path.join(S.elite_fp, '*.json')):
+                if os.path.basename(f) not in [e[0] + ".json" for e in Map]:
+                    print(f"Removing {f} from elite folder")
+                    os.remove(f)
                 
         Map =  sorted(Map, key=lambda x: x[1], reverse=True)
     
