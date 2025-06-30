@@ -10,12 +10,9 @@ import IPython.display
 
 import Functions as F
 import Settings as S
-
-#######################################################_ Lenia _######################################################################################################
-
 #__________________________________________________ Simulation parameters ________________________________________________________________________
 
-size = S.size;  mid = S.mid;  scale = S.scale;  cx, cy = S.cx, S.cy
+size =int(S.size*2) ;  mid = S.mid;  scale = S.scale;  cx, cy = S.cx, S.cy
 frame_id = 0
 #________________________________________________________________________________________________________________________________________________
 
@@ -39,9 +36,12 @@ def run_world_execute(me, show_animation, max_iterations=2000):
   #Multiple kernels preparation
   Ds = []
   for k in kernels:
-      y, x = np.ogrid[-mid:mid, -mid:mid]
-      D = (np.sqrt(x**2 + y**2)) / R * len(k['b']) / k['r']
-      Ds.append(D)
+    y, x = np.ogrid[:size, :size]
+    y = y - size // 2
+    x = x - size // 2
+    D = (np.sqrt(x**2 + y**2)) / R * len(k['b']) / k['r']
+    Ds.append(D)
+      
   Ks = [ (D<len(k['b'])) * np.asarray(k['b'])[np.minimum(D.astype(int),len(k['b'])-1)] * F.bell(D%1, 0.5, 0.15) for D,k in zip(Ds,kernels) ]
   nKs = [ K / np.sum(K) for K in Ks ]
   fKs = [ np.fft.fft2(np.fft.fftshift(K)) for K in nKs ]

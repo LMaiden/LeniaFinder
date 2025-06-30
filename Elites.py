@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 
 import Functions as F
 import shutil
+import SLE
 
 ################# MAP ELITES #################
 
@@ -18,9 +19,9 @@ def init_population(number):
     population = {}
     for i in range(number):
         name = f"evo_{i}"
-        R = Lenia.pattern["aquarium"]["R"]
-        T = Lenia.pattern["aquarium"]["T"]
-        kernels= Lenia.pattern["aquarium"]["kernels"].copy()
+        R = SLE.pattern["aquarium"]["R"]
+        T = SLE.pattern["aquarium"]["T"]
+        kernels= SLE.pattern["aquarium"]["kernels"].copy()
         cells = [[[random.random() for _ in range(54)] for _ in range(54)] for _ in range(3)]
         population[name] = {
             "name": name,
@@ -38,9 +39,9 @@ def new_generation(parents, generation, initial_population):
         
     for i in range(initial_population):
         name = f"evo_{i}_{generation}"
-        R = Lenia.pattern["aquarium"]["R"]
-        T = Lenia.pattern["aquarium"]["T"]
-        kernels= Lenia.pattern["aquarium"]["kernels"].copy()
+        R = SLE.pattern["aquarium"]["R"]
+        T = SLE.pattern["aquarium"]["T"]
+        kernels= SLE.pattern["aquarium"]["kernels"].copy()
         cells  = F.crossover(F.mutate(parents[random.randint(0, len(parents)-1)]),
                                  F.mutate(parents[random.randint(0, len(parents)-1)]))
         cells = cells[0 : 3][0 : 54][0 : 54]
@@ -49,7 +50,7 @@ def new_generation(parents, generation, initial_population):
             for i in range(len(newcells)):
                 for j in range(len(newcells[i])):
                     for k in range(54):
-                        if random.random() < 0.1:
+                        if random.random() < 0.03:
                             newcells[i][j][k] = max(0, min(cells[i][j][k] + random.random(), 1))
                         else:
                             newcells[i][j][k] = cells[i][j][k]

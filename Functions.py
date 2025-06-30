@@ -114,7 +114,7 @@ def selector(performance, n_elites):
     Returns a list of (entity, score) tuples.
     """
     def compute_score(metrics):
-        return (10*metrics['avg_mass']) - ( metrics['std_mass']) -  metrics['avg_velocity']
+        return (10*metrics['avg_mass']) - ( metrics['std_mass']) -  5*metrics['avg_velocity']
 
     sorted_entities = sorted(
         performance.items(),
