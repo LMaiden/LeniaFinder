@@ -1,18 +1,20 @@
-# Lenia Parameters
+''' Gloabal configuration file for NEAT, Lenia_settings should be a subset of this '''
+###################################################################################
+'''global parameters'''
 
-size = 64;  
-mid = size // 2;  
-scale = 1;  
-cx, cy = 10, 10
-frame_id = 0
+DIM_X = 64
+DIM_Y = 64
+DIM_C = 3 #number of channels 
 
-### filepaths
-elite_fp = r'C:\Users\gweno\Documents\Homework\ResearchEC\elites'
-data_fp = r'C:\Users\gweno\Documents\Homework\ResearchEC\data'
-hof_fp = r'C:\Users\gweno\Documents\Homework\ResearchEC\Hof_entities'
+###############################################################################
+'''lenia parameters'''
 
-### Spaghetti
+MIDDLE_X = DIM_X // 2
+MIDDLE_Y = DIM_Y // 2
 
-import numpy as np
+SCALE = 1
 
-Channel_size = 3 #Equals to the number of channels in your evoling  -> np.array(Lenia.pattern["aquarium"]["cells"]).shape
+CX = 10
+CY = 10
+
+###################################################################################
