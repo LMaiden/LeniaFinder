@@ -11,6 +11,7 @@ env/
 
 # Data and large files (adjust to your needs)
 data/
+
 *.json
 
 # Jupyter

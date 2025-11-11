@@ -1,7 +1,7 @@
 import matplotlib
 # matplotlib.use('Agg')
 
-
+##################################
 import optuna
 import neat
 import numpy as np
@@ -11,9 +11,13 @@ import Visualizer as vs
 import matplotlib.pyplot as plt
 import gc
 
+##################################
+
 GRID_SIZE_X = Settings.DIM_X
 GRID_SIZE_Y = Settings.DIM_Y
 GRID_SIZE_C = Settings.DIM_C
+
+##################################
 
 def create_FFNeat(genome, config):
     return neat.nn.FeedForwardNetwork.create(genome, config)
@@ -78,13 +82,49 @@ def run_neat(trial):
     winner = pop.run(evaluate_genome, 5)
     return winner.fitness
 
-def objective(trial):
+def run_cppn(trial):
+    params = {
+        'pop_size': trial.suggest_int('pop_size', 10, 50),
+        'weight_mutate_rate': trial.suggest_float('weight_mutate_rate', 0.1, 0.9),
+        'weight_replace_rate': trial.suggest_float('weight_replace_rate', 0.0, 0.5),
+        'bias_mutate_rate': trial.suggest_float('bias_mutate_rate', 0.1, 0.9),
+        'response_mutate_rate': trial.suggest_float('response_mutate_rate', 0.0, 0.5),
+        'conn_add_prob': trial.suggest_float('conn_add_prob', 0.1, 0.9),
+        'conn_delete_prob': trial.suggest_float('conn_delete_prob', 0.1, 0.5),
+        'node_add_prob': trial.suggest_float('node_add_prob', 0.0, 0.5),
+        'node_delete_prob': trial.suggest_float('node_delete_prob', 0.0, 0.5),
+        'enabled_mutate_rate': trial.suggest_float('enabled_mutate_rate', 0.0, 0.2),
+        'compatibility_threshold': trial.suggest_float('compatibility_threshold', 1.0, 5.0),
+    }
+
+    config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
+                         neat.DefaultSpeciesSet, neat.DefaultStagnation,
+                         'neat_config')
+    config.pop_size = params['pop_size']
+    config.genome_config.weight_mutate_rate = params['weight_mutate_rate']
+    config.genome_config.weight_replace_rate = params['weight_replace_rate']
+    config.genome_config.bias_mutate_rate = params['bias_mutate_rate']
+    config.genome_config.response_mutate_rate = params['response_mutate_rate']
+    config.genome_config.conn_add_prob = params['conn_add_prob']
+    config.genome_config.conn_delete_prob = params['conn_delete_prob']
+    config.genome_config.node_add_prob = params['node_add_prob']
+    config.genome_config.node_delete_prob = params['node_delete_prob']
+    config.genome_config.enabled_mutate_rate = params['enabled_mutate_rate']
+    config.compatibility_threshold = params['compatibility_threshold']
+    
+    
+    
+
+def objective_neat(trial):
     return run_neat(trial)
+
+def objective_cppn(trial):
+    return run_cppn(trial)
 
 if __name__ == "__main__":
     gc.enable()
     study = optuna.create_study(direction='maximize')
-    study.optimize(objective, n_trials=20, timeout=7200)  # 20 trials, 1 hour timeout
+    study.optimize(objective_cppn, n_trials=20, timeout=7200)  # 20 trials, 1 hour timeout
 
     print("Best trial:")
     trial = study.best_trial
