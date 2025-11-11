@@ -1,4 +1,6 @@
 import matplotlib
+import random
+random.seed(42)
 # matplotlib.use('Agg')
 
 ##################################
@@ -124,7 +126,7 @@ def objective_cppn(trial):
 if __name__ == "__main__":
     gc.enable()
     study = optuna.create_study(direction='maximize')
-    study.optimize(objective_cppn, n_trials=20, timeout=7200)  # 20 trials, 1 hour timeout
+    study.optimize(objective_neat, n_trials=20, timeout=7200)  # 20 trials, 1 hour timeout
 
     print("Best trial:")
     trial = study.best_trial

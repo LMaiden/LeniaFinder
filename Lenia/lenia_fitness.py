@@ -29,7 +29,7 @@ def fitness_main(configuration): # configuration is the result of a pattern gene
     cells = configuration
     
     singleton = factory.entity_creator(tag, r, t, kernels, cells)
-    env.run_world_execute(singleton, show_animation=True, max_iterations=2000)
+    env.run_world_execute(singleton)
     data = manager.get_frames()
     
     ''' Data is the Lenia output array, shape is (frames, x, y, channels).'''
@@ -44,7 +44,7 @@ def fitness_SR(tag) -> float:
 
 
 def fitness_entropy(tag) -> float:
-    return np.sum(math.entropy(tag))
+    return np.sum(math.entropy(tag)) + 1
     
     
     

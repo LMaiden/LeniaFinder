@@ -1,14 +1,20 @@
 '''Lenia framework'''
 
 ###################################################################################
+
 ''' imports '''
 import numpy as np
 import scipy.signal
+
+import matplotlib
+matplotlib.use('Agg')
+
 import matplotlib.pylab as plt
 import matplotlib.animation
 import IPython.display
 import gc
 ###################################################################################
+
 ''' custom imports '''
 import Lenia.lenia_settings as config
 import Lenia.Functions.Math as math
@@ -29,11 +35,13 @@ mid = config.mid
 
 scale = config.scale
 
+max_iterations = config.max_iterations
+
 #___________________________________________________________________________________________________________________________
 
 ''' Lenia function '''
 
-def run_world_execute(me, show_animation = False, max_iterations=2000):
+def run_world_execute(me, show_animation = False, max_iterations=200):
 
   
   R = me['R']
@@ -84,15 +92,15 @@ def run_world_execute(me, show_animation = False, max_iterations=2000):
 
 
   fig, ax = plt.subplots()
-  img = ax.imshow(A, cmap='viridis', interpolation='nearest')
+  img = ax.imshow(np.dstack(As), cmap='viridis', interpolation='nearest')
+ 
+  for i in range(0, max_iterations):
+      update(i)
 
-  ani = matplotlib.animation.FuncAnimation(
-      fig, update, frames=5, interval=20, blit=True, repeat=False,
-  )
-  
-  plt.pause(0.5)
-  plt.close('all')
+   
+
+  plt.close(fig)
   gc.collect()
-  
-  
-  
+
+
+
